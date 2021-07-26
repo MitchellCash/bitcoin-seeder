@@ -64,3 +64,22 @@ the -p 5353 option.
 Another solution is allowing a binary to bind to ports < 1024 with setcap (IPv6 access-safe)
 
 $ setcap 'cap_net_bind_service=+ep' /path/to/dnsseed
+
+
+RUNNING ON UBUNTU
+-----------------
+
+All Ubuntu releases starting with 16.10 (first released in October 2016) come installed with
+systemd-resolved, which effectively prevents the seeder's built-in DNS server from working
+correctly. This is due to both applications requiring use of port 53, and systemd-resolved takes
+priority by default.
+
+Disable binding of systemd-resolved to port 53 by editing the /etc/systemd/resolved.conf file
+and adding this line to the bottom of the file:
+
+DNSStubListener=no
+
+Save and reboot, and now systemd-resolved will no longer interfere with the seeder's DNS server.
+
+NOTE: This method is only supported by systemd 232 and newer. You can check your version of systemd
+with the cmd: systemctl --version
