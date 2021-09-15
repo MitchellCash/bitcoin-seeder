@@ -75,11 +75,21 @@ correctly. This is due to both applications requiring use of port 53, and system
 priority by default.
 
 Disable binding of systemd-resolved to port 53 by editing the /etc/systemd/resolved.conf file
-and adding this line to the bottom of the file:
+and adding these lines to the bottom of the file:
 
+DNS=1.1.1.1
 DNSStubListener=no
+
+Next create a symbolic link to /etc/systemd/resolved.conf:
+
+sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 Save and reboot, and now systemd-resolved will no longer interfere with the seeder's DNS server.
 
 NOTE: This method is only supported by systemd 232 and newer. You can check your version of systemd
 with the cmd: systemctl --version
+
+If you want to undo these changes, comment out the lines added to /etc/systemd/resolved.conf above
+and remove the symbolic link:
+
+sudo rm /etc/resolv.conf
